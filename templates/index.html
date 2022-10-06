@@ -1,0 +1,50 @@
+<html>
+    <body>
+        <form id="name_form">
+            <label>Nome: </label>
+            <input type="text" name="nome" placeholder="Insira seu nome"/>
+            <label>Time: </label>
+            <input type="text" name="time" placeholder="Insira seu time"/>
+            <label>Posição: </label>
+            <select id ="myCombo">
+             <option value="opcao1" selected >Selecione</option>
+             <option value="opcao2">Zagueiro</option>
+             <option value="opcao3">Lateral</option>
+             <option value="opcao4">Meio-campo</option>
+             <option value="opcao5">Centro-avante</option>
+            </select>
+            <input type="submit" value="submit" />
+        </form>
+         <label id="resp" name="resp" ></label>
+        
+        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+        <script type="text/javascript">
+            $('#name_form').submit(function(e) {
+                    e.preventDefault();
+
+                    var formobj = {
+                       nome: $('[name=nome]').val().toUpperCase(),
+                       time:$('[name=time]').val().toUpperCase(),
+                       combo: $('#myCombo option:selected').text().toUpperCase()
+                    }
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/api/jogador',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(formobj),
+                        success: function(callback) {
+                            console.log(callback);
+                            $("#name_form").trigger('reset');
+                            $('#resp').text(callback.nome + ' - ' + callback.time + ' - '  + callback.combo);
+                            $('[name=nome]').val();
+                        },
+                        error: function() {
+                            $(this).html("error!");
+                        }
+                    });
+                });
+        </script>
+    </body>
+</html>
